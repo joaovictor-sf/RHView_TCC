@@ -1,0 +1,18 @@
+﻿@model List<DateTime>
+@{
+    ViewData["Title"] = "Detalhes do Usuário";
+    var userId = ViewBag.UserId;
+}
+
+<h2>Selecione uma data</h2>
+
+<form method="get" asp-controller="User" asp-action="DetalhesPorData">
+    <input type="hidden" name="userId" value="@userId" />
+    <select name="dataSelecionada" class="form-select">
+        @foreach (var data in Model) {
+            <option value="@data.ToString("yyyy-MM-dd")">@data.ToString("dd/MM/yyyy")</option>
+        }
+    </select>
+
+    <button type="submit" class="btn btn-primary mt-2">Ver Dados</button>
+</form>
