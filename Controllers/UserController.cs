@@ -4,6 +4,7 @@ using RHView_TCC.Data;
 using RHView_TCC.Models;
 using RHView_TCC.Models.DTOs;
 using RHView_TCC.Models.Enuns;
+using System.Diagnostics;
 
 namespace RHView_TCC.Controllers
 {
@@ -54,9 +55,14 @@ namespace RHView_TCC.Controllers
             var log = await _context.DailyWorkLogs
                 .FirstOrDefaultAsync(l => l.UserId == id && l.Date == data);
 
+            var processos = await _context.ProcessLogs
+                .Where(p => p.UserId == id && p.Date == data)
+                .ToListAsync();
+
             ViewBag.Datas = datas;
             ViewBag.DataSelecionada = data;
             ViewBag.UserId = id;
+            ViewBag.Processos = processos;
 
             return View(log);
         }

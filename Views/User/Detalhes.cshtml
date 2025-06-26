@@ -6,6 +6,8 @@
     var userId = ViewBag.UserId;
     var datas = ViewBag.Datas as List<DateTime>;
     var dataSelecionada = ViewBag.DataSelecionada as DateTime?;
+
+    var processos = ViewBag.Processos as List<RHView_TCC.Models.ProcessLog>;
 }
 
 <h2>Detalhes do dia: @dataSelecionada?.ToString("dd/MM/yyyy")</h2>
@@ -29,4 +31,30 @@
     </div>
 } else {
     <p>Nenhum log encontrado para a data selecionada.</p>
+}
+
+@if (processos != null && processos.Any()) {
+    <div class="mt-4">
+        <h4>Processos Monitorados</h4>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Aplicativo</th>
+                    <th>Título da Janela</th>
+                    <th>Tempo de Uso</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var p in processos) {
+                    <tr>
+                        <td>@p.AppName</td>
+                        <td>@p.WindowTitle</td>
+                        <td>@p.UsageTime.ToString(@"hh\:mm\:ss")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+} else {
+    <p>Nenhum processo registrado nesse dia.</p>
 }
