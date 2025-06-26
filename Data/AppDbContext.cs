@@ -15,11 +15,14 @@ namespace RHView_TCC.Data {
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             modelBuilder.Entity<UserModel>()
                         .Property(u => u.Role)
-                        .HasConversion<string>(); // salva como texto no banco
+                        .HasConversion<string>();
+
+            modelBuilder.Entity<UserModel>()
+                        .Property(u => u.WorkHours)
+                        .HasConversion<string>();
 
             base.OnModelCreating(modelBuilder);
 
-            // Chave composta e restrições podem ser configuradas aqui se necessário
             modelBuilder.Entity<ProcessLog>()
                 .HasOne(p => p.User)
                 .WithMany(u => u.ProcessLogs)
@@ -37,6 +40,7 @@ namespace RHView_TCC.Data {
                 .WithMany()
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+
         }
     }
 }

@@ -1,0 +1,18 @@
+﻿@model RHView_TCC.Models.DTOs.LoginDTO
+
+<h2>Login</h2>
+
+<form method="post">
+    <div class="mb-3">
+        <label asp-for="Username" class="form-label">Usuário</label>
+        <input asp-for="Username" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Password" class="form-label">Senha</label>
+        <input asp-for="Password" class="form-control" type="password" />
+    </div>
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage)) {
+        <div class="alert alert-danger">@Model.ErrorMessage</div>
+    }
+    <button type="submit" class="btn btn-primary">Entrar</button>
+</form>

@@ -7,7 +7,8 @@
     var datas = ViewBag.Datas as List<DateTime>;
     var dataSelecionada = ViewBag.DataSelecionada as DateTime?;
 
-    var processos = ViewBag.Processos as List<RHView_TCC.Models.ProcessLog>;
+    var processos = ViewBag.Processos as List<ProcessLog>;
+    var inatividade = ViewBag.Inatividade as InactivityLog;
 }
 
 <h2>Detalhes do dia: @dataSelecionada?.ToString("dd/MM/yyyy")</h2>
@@ -57,4 +58,16 @@
     </div>
 } else {
     <p>Nenhum processo registrado nesse dia.</p>
+}
+
+@if (inatividade != null) {
+    <div class="mt-4">
+        <h4>Inatividade</h4>
+        <ul>
+            <li><strong>Tempo total de inatividade:</strong> @inatividade.TotalInactivity.ToString(@"hh\:mm\:ss")</li>
+            <li><strong>Maior período contínuo:</strong> @inatividade.MaxInactivity.ToString(@"hh\:mm\:ss")</li>
+        </ul>
+    </div>
+} else {
+    <p>Nenhum log de inatividade registrado para essa data.</p>
 }

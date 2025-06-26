@@ -17,6 +17,10 @@ namespace RHView_TCC.Controllers
         }
 
         public IActionResult Index() {
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+                return RedirectToAction("Index", "Login");
+
             var usuariosAtivos = _context.Users
                 .Where(u => u.IsActive && u.Role == UserRole.DEV)
                 .Select(u => new {
@@ -50,7 +54,7 @@ namespace RHView_TCC.Controllers
                 return View("Detalhes", new DailyWorkLog());
             }
 
-            var data = dataSelecionada ?? datas.First(); // usa a data mais recente se nenhuma for escolhida
+            var data = dataSelecionada ?? datas.First(); // usa a data mais recente por padrão
 
             var log = await _context.DailyWorkLogs
                 .FirstOrDefaultAsync(l => l.UserId == id && l.Date == data);
@@ -59,16 +63,19 @@ namespace RHView_TCC.Controllers
                 .Where(p => p.UserId == id && p.Date == data)
                 .ToListAsync();
 
+            var inatividade = await _context.InactivityLogs
+                .FirstOrDefaultAsync(i => i.UserId == id && i.Date == data);
+
             ViewBag.Datas = datas;
             ViewBag.DataSelecionada = data;
             ViewBag.UserId = id;
             ViewBag.Processos = processos;
+            ViewBag.Inatividade = inatividade;
 
             return View(log);
         }
 
         public IActionResult DetalhesPorData(int userId, DateTime dataSelecionada) {
-            // Por enquanto só redireciona para Detalhes novamente
             return RedirectToAction("Detalhes", new { id = userId });
         }
 
