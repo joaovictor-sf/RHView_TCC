@@ -1,18 +1,32 @@
-﻿@model List<DateTime>
+﻿@using RHView_TCC.Models
+
+@model RHView_TCC.Models.DailyWorkLog
 @{
     ViewData["Title"] = "Detalhes do Usuário";
     var userId = ViewBag.UserId;
+    var datas = ViewBag.Datas as List<DateTime>;
+    var dataSelecionada = ViewBag.DataSelecionada as DateTime?;
 }
 
-<h2>Selecione uma data</h2>
+<h2>Detalhes do dia: @dataSelecionada?.ToString("dd/MM/yyyy")</h2>
 
-<form method="get" asp-controller="User" asp-action="DetalhesPorData">
-    <input type="hidden" name="userId" value="@userId" />
+<form method="get" asp-controller="User" asp-action="Detalhes">
+    <input type="hidden" name="id" value="@userId" />
     <select name="dataSelecionada" class="form-select">
-        @foreach (var data in Model) {
-            <option value="@data.ToString("yyyy-MM-dd")">@data.ToString("dd/MM/yyyy")</option>
+        @foreach (var data in datas) {
+            <option value="@data.ToString("yyyy-MM-dd")" selected="@(data == dataSelecionada)">
+                @data.ToString("dd/MM/yyyy")
+            </option>
         }
     </select>
-
     <button type="submit" class="btn btn-primary mt-2">Ver Dados</button>
 </form>
+
+@if (Model != null) {
+    <div class="mt-4">
+        <h4>Tempo Trabalhado:</h4>
+        <p>@Model.TimeWorked.ToString(@"hh\:mm\:ss")</p>
+    </div>
+} else {
+    <p>Nenhum log encontrado para a data selecionada.</p>
+}

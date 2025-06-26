@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RHView_TCC.Data;
+using RHView_TCC.Models;
 using RHView_TCC.Models.DTOs;
 using RHView_TCC.Models.Enuns;
 
@@ -36,15 +37,28 @@ namespace RHView_TCC.Controllers
             return View(usuariosAtivos);
         }
 
-        public async Task<IActionResult> Detalhes(int id) {
+        public async Task<IActionResult> Detalhes(int id, DateTime? dataSelecionada = null) {
             var datas = await _context.DailyWorkLogs
                 .Where(l => l.UserId == id)
                 .OrderByDescending(l => l.Date)
                 .Select(l => l.Date)
                 .ToListAsync();
 
+            if (!datas.Any()) {
+                ViewBag.Mensagem = "Nenhum dado encontrado para esse usuário.";
+                return View("Detalhes", new DailyWorkLog());
+            }
+
+            var data = dataSelecionada ?? datas.First(); // usa a data mais recente se nenhuma for escolhida
+
+            var log = await _context.DailyWorkLogs
+                .FirstOrDefaultAsync(l => l.UserId == id && l.Date == data);
+
+            ViewBag.Datas = datas;
+            ViewBag.DataSelecionada = data;
             ViewBag.UserId = id;
-            return View(datas); // envia a lista de datas para a View
+
+            return View(log);
         }
 
         public IActionResult DetalhesPorData(int userId, DateTime dataSelecionada) {
